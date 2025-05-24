@@ -64,6 +64,16 @@ Create a Numbers file with two tables:
    ```
 4. Customize the message template in the script
 
+## Important Notes
+
+### iMessage Script Disclaimer
+
+⚠️ **Use at Your Own Discretion**: This script automates the Messages app in ways that may not align with Apple's intended use of the application. While it uses publicly available AppleScript APIs, automated messaging could potentially violate Terms of Service. Use responsibly and at your own risk.
+
+**Performance**: The iMessage script processes approximately 100 contacts in 5-10 minutes due to built-in delays that prevent system overload and ensure message delivery reliability.
+
+**Message Types**: This script can send to both SMS and iMessage recipients, provided your Apple ID and phone number are properly configured in Messages app settings. The system will automatically choose the appropriate delivery method based on the recipient's capabilities.
+
 ## Usage
 
 ### iMessage Script

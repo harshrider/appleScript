@@ -1,0 +1,90 @@
+-- iMessage Marketing Automation Script
+-- Sends personalized messages to contacts from Numbers spreadsheet
+
+-- Configuration - Update this path to your Numbers file
+set numbersFilePath to "/path/to/your/spreadsheet.numbers"
+set numbersFile to POSIX file numbersFilePath as alias
+
+-- Read data from Numbers spreadsheet
+tell application "Numbers"
+    open numbersFile
+    tell front document
+        tell active sheet
+            -- Get contact names from column B (skip header row)
+            set contactNames to value of cells 2 thru -1 of column "B" of table "Addresses"
+            -- Get phone numbers from column A (skip header row)
+            set contactNumbers to value of cells 2 thru -1 of column "A" of table "Addresses"
+            -- Get message template from Content table
+            set theContent to value of cell "A2" of table "Content"
+        end tell
+    end tell
+end tell
+
+-- Send messages to each contact
+repeat with i from 1 to (count of contactNumbers)
+    set contactName to item i of contactNames
+    set contactNumber to item i of contactNumbers
+    
+    -- Skip invalid entries (optional)
+    -- if contactName is missing value or contactNumber is missing value then
+    --     display dialog "Skipping invalid entry at row " & (i + 1)
+    --     exit repeat
+    -- end if
+    
+    -- Send personalized message
+    sendiMessage(contactNumber, contactName, theContent)
+end repeat
+
+-- Message sending handler
+on sendiMessage(recipient, contactName, theContent)
+    tell application "Messages"
+        activate
+        delay 0.5
+        
+        tell application "System Events"
+            -- Create new message (Cmd+N)
+            keystroke "n" using command down
+            delay 1
+            
+            -- Add recipient
+            set the clipboard to recipient
+            keystroke "v" using command down
+            delay 1 -- Wait for contact resolution
+            
+            -- Move to message field
+            keystroke tab
+            delay 1
+            keystroke return
+            delay 1
+            
+            -- Type personalized message
+            -- Customize this section for your business
+            keystroke "Dear " & contactName & " It's [Your Name], your [Business] from [City]."
+            delay 1
+            keystroke return
+            delay 1
+            
+            -- Main message content from spreadsheet
+            keystroke theContent
+            delay 5
+            keystroke return
+            delay 0.5
+            
+            -- Add website/contact info
+            keystroke "yourwebsite.com/contact"
+            delay 1
+            keystroke return
+            delay 1
+            
+            -- Closing message
+            keystroke "Looking forward to hearing from you!"
+            delay 1
+            keystroke return
+            delay 1
+            
+            -- Note: Message is typed but NOT automatically sent
+            -- Review each message before pressing Enter to send
+            
+        end tell
+    end tell
+end sendiMessage
